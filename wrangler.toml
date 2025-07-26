@@ -1,0 +1,10 @@
+name              = "ritchie-fitzgerald"
+main              = "worker.js"
+compatibility_date = "2025-07-26"
+
+# tell Wrangler to upload everything in ./public
+assets = { directory = "./public" }
+
+# optional: deploy straight to a custom domain / route
+# routes = [{ pattern = "example.com/*" }]
+# zone_id = "YOUR_ZONE_ID"
