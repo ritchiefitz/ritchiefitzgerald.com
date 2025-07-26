@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>My Developer Portfolio</title>
+  <style>
+    :root {
+      --accent: #10b981;
+      --bg: #f9fafb;
+      --text: #111827;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      background: var(--card-bg);
+      padding: 2rem 1rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    header h1 { margin: 0; font-size: 2rem; }
+    nav a {
+      margin: 0 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    section {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    #projects .grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .project-card {
+      background: var(--card-bg);
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card img {
+      width: 100%;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      height: 140px;
+    }
+    .project-card h3 { margin: 0.75rem 0 0.5rem; }
+    .project-card p { flex-grow: 1; }
+    button, .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.375rem;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover, .btn:hover { background: #059669; }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Jane Developer</h1>
+  <nav>
+    <a href='#about'>About</a>
+    <a href='#projects'>Projects</a>
+    <a href='#contact'>Contact</a>
+  </nav>
+</header>
+
+<section id='about'>
+  <h2>About Me</h2>
+  <p>
+    I'm a full‑stack engineer who loves building performant web applications and tinkering with new edge‑compute platforms like <strong>Cloudflare Workers</strong>. This site is deployed on <em>Cloudflare Pages</em> for lightning‑fast global delivery.
+  </p>
+</section>
+
+<section id='projects'>
+  <h2>Featured Projects</h2>
+  <div class='grid'>
+    <article class='project-card'>
+      <img src='https://placekitten.com/400/240' alt='Project screenshot'>
+      <h3>Realtime Chat Demo</h3>
+      <p>A serverless chat app that runs entirely on Cloudflare Workers + Durable Objects, delivering sub‑50 ms pings worldwide.</p>
+      <a class='btn' href='https://github.com/yourname/realtime-chat' target='_blank' rel='noopener'>View on GitHub</a>
+    </article>
+
+    <article class='project-card'>
+      <img src='https://placekitten.com/401/240' alt='Project screenshot'>
+      <h3>Markdown Blog Engine</h3>
+      <p>An isomorphic blog generator using Astro and Markdown, auto‑deployed on push via Pages CI.</p>
+      <a class='btn' href='https://github.com/yourname/markdown-blog' target='_blank' rel='noopener'>View on GitHub</a>
+    </article>
+
+    <article class='project-card'>
+      <img src='https://placekitten.com/402/240' alt='Project screenshot'>
+      <h3>Image Optimizer Worker</h3>
+      <p>An edge image resizer that converts and caches hero images for <abbr title='cumulative layout shift'>CLS</abbr>-free loading.</p>
+      <a class='btn' href='https://github.com/yourname/image-optimizer' target='_blank' rel='noopener'>View on GitHub</a>
+    </article>
+  </div>
+</section>
+
+<section id='contact'>
+  <h2>Contact</h2>
+  <p>Feel free to reach out via <a href='mailto:hello@example.com'>email</a> or connect on <a href='https://www.linkedin.com/in/yourprofile' target='_blank' rel='noopener'>LinkedIn</a>.</p>
+</section>
+
+<footer>
+  &copy; <span id='year'></span> Jane Developer. Built with ♥️ and deployed on Cloudflare Pages.
+</footer>
+
+<script>
+  // Update footer year automatically
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
