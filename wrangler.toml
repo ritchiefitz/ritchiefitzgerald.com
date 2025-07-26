@@ -8,3 +8,15 @@ assets = { directory = "./public" }
 # optional: deploy straight to a custom domain / route
 # routes = [{ pattern = "example.com/*" }]
 # zone_id = "YOUR_ZONE_ID"
+
+# CUSTOM‑DOMAIN ROUTES
+routes = [
+  # Apex domain
+  { pattern = "ritchiefitzgerald.com/*",  zone_name = "ritchiefitzgerald.com" },
+
+  # WWW sub‑domain
+  { pattern = "www.ritchiefitzgerald.com/*", zone_name = "ritchiefitzgerald.com" }
+]
+
+# OPTIONAL: HIDE THE workers.dev PREVIEW
+workers_dev = false                          # omit if you still want the preview
