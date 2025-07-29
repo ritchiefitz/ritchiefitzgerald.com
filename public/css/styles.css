@@ -1,0 +1,127 @@
+/* Andy's Awesome Fun Zone - Main Styles */
+:root {
+  --primary: #ff6b6b;
+  --secondary: #4ecdc4;
+  --accent: #45b7d1;
+  --warning: #ffa726;
+  --success: #66bb6a;
+  --purple: #ab47bc;
+  --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --text: #2c3e50;
+  --shadow: 0 8px 32px rgba(0,0,0,0.1);
+  --glow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+/* Game-specific styles */
+.game-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.game-canvas {
+  border: 3px solid var(--primary);
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+  background: #000;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.game-button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(45deg, var(--primary), var(--warning));
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.game-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.game-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.game-score {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary);
+  margin: 1rem 0;
+}
+
+.game-instructions {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.game-instructions h3 {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+/* Back to home button */
+.back-button {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--secondary);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--glow);
+}
+
+/* Responsive design for games */
+@media (max-width: 768px) {
+  .game-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .game-canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .back-button {
+    position: static;
+    display: block;
+    margin: 1rem auto;
+    width: fit-content;
+  }
+}

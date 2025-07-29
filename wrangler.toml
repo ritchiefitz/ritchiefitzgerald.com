@@ -1,4 +1,4 @@
-name              = "ritchie-fitzgerald-com"
+name              = "andy-fitzgerald-com"
 main              = "worker.js"
 compatibility_date = "2025-07-26"
 
@@ -12,10 +12,10 @@ assets = { directory = "./public" }
 # CUSTOM‑DOMAIN ROUTES
 routes = [
   # Apex domain
-  { pattern = "ritchiefitzgerald.com/*",  zone_name = "ritchiefitzgerald.com" },
+  { pattern = "andy-fitzgerald.com/*",  zone_name = "andy-fitzgerald.com" },
 
   # WWW sub‑domain
-  { pattern = "www.ritchiefitzgerald.com/*", zone_name = "ritchiefitzgerald.com" }
+  { pattern = "www.andy-fitzgerald.com/*", zone_name = "andy-fitzgerald.com" }
 ]
 
 # OPTIONAL: HIDE THE workers.dev PREVIEW

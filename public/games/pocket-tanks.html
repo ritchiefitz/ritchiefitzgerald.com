@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Tanks - Epic Artillery Combat</title>
+  <style>
+    :root {
+      --primary-color: #00ff41;
+      --secondary-color: #ffaa00;
+      --danger-color: #ff6b35;
+      --background-dark: #0a0a0a;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    
+    .back-button {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      padding: 0.75rem 1.5rem;
+      background: #4ecdc4;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .back-button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    }
+    
+    .game-header {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(20, 20, 30, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 100;
+      margin-bottom: 1rem;
+    }
+    
+    .game-header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    }
+    
+    .main-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+    }
+
+    .game-container {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 50px rgba(0, 255, 65, 0.3);
+      backdrop-filter: blur(10px);
+      max-width: 1000px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+
+
+    .game-info {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: rgba(0, 255, 65, 0.1);
+      border-radius: 10px;
+      border: 1px solid var(--primary-color);
+    }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .player-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .player1 { color: var(--primary-color); }
+    .player2 { color: var(--danger-color); }
+
+    .health-bar {
+      width: 100px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .health-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .health-fill.player1 { background: var(--primary-color); }
+    .health-fill.player2 { background: var(--danger-color); }
+
+    .game-canvas {
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      background: linear-gradient(180deg, #87CEEB 0%, #98FB98 70%, #8B4513 100%);
+      display: block;
+      margin: 0 auto 1rem;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .control-group label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .control-input {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid var(--primary-color);
+      color: var(--text-primary);
+      padding: 0.5rem;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      width: 80px;
+      text-align: center;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+    }
+
+    .weapon-select {
+      width: 150px;
+    }
+
+    .game-button {
+      background: linear-gradient(45deg, var(--primary-color), #00cc33);
+      color: var(--background-dark);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 255, 65, 0.3);
+    }
+
+    .game-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 65, 0.5);
+    }
+
+    .game-button:active {
+      transform: translateY(0);
+    }
+
+    .game-button.fire {
+      background: linear-gradient(45deg, var(--danger-color), #ff4500);
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    .game-button.fire:hover {
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+    }
+
+    .turn-indicator {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 0;
+      padding: 0.75rem 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      border: 2px solid;
+      animation: pulse 2s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    .turn-indicator.player1 {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .turn-indicator.player2 {
+      border-color: var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .game-over {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid var(--secondary-color);
+      display: none;
+      z-index: 100;
+      min-width: 300px;
+      box-shadow: 0 0 50px rgba(255, 170, 0, 0.5);
+    }
+
+    .game-over h2 {
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px var(--secondary-color);
+    }
+
+    .instructions {
+      text-align: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(0, 255, 65, 0.1);
+      border-radius: 10px;
+      border: 1px solid var(--primary-color);
+    }
+
+    .instructions h3 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .instructions p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .game-canvas {
+        width: 90vw !important;
+        height: 300px !important;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .game-info {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        text-align: center;
+      }
+      
+      .turn-indicator {
+        font-size: 1rem;
+        padding: 0.5rem;
+      }
+      
+      .back-button {
+        position: static;
+        display: block;
+        margin: 1rem auto;
+        width: fit-content;
+      }
+      
+      .game-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-button">🏠 Back to Gaming Zone</a>
+  
+  <div class="game-header">
+    <h1>🎯 POCKET TANKS 💥</h1>
+  </div>
+  
+  <div class="main-wrapper">
+    <div class="game-container">
+    
+    <div class="game-info">
+      <div class="player-info">
+        <div class="player-name player1">🟢 PLAYER 1</div>
+        <div class="health-bar">
+          <div class="health-fill player1" id="health1" style="width: 100%"></div>
+        </div>
+        <div id="score1">0 pts</div>
+      </div>
+      
+      <div class="turn-indicator player1" id="turnIndicator">
+        🎯 PLAYER 1'S TURN
+      </div>
+      
+      <div class="player-info">
+        <div class="player-name player2">🔴 PLAYER 2</div>
+        <div class="health-bar">
+          <div class="health-fill player2" id="health2" style="width: 100%"></div>
+        </div>
+        <div id="score2">0 pts</div>
+      </div>
+    </div>
+    
+    <canvas id="gameCanvas" class="game-canvas" width="800" height="400"></canvas>
+    
+    <div class="controls">
+      <div class="control-group">
+        <label>Angle</label>
+        <input type="number" id="angleInput" class="control-input" value="45" min="0" max="180">
+      </div>
+      
+      <div class="control-group">
+        <label>Power</label>
+        <input type="number" id="powerInput" class="control-input" value="50" min="10" max="100">
+      </div>
+      
+      <div class="control-group">
+        <label>Weapon</label>
+        <select id="weaponSelect" class="control-input weapon-select">
+          <option value="normal">💣 Normal Shell</option>
+          <option value="big">💥 Big Bomb</option>
+          <option value="cluster">🎆 Cluster Bomb</option>
+          <option value="laser">⚡ Laser Beam</option>
+        </select>
+      </div>
+      
+      <button class="game-button fire" onclick="fire()">🔥 FIRE!</button>
+    </div>
+    
+    <div class="controls">
+      <button class="game-button" onclick="newGame()">🔄 NEW GAME</button>
+      <button class="game-button" onclick="resetTerrain()">🏔️ NEW TERRAIN</button>
+    </div>
+    
+    <div class="instructions">
+      <h3>🎮 HOW TO PLAY</h3>
+      <p>
+        <strong>🎯 Objective:</strong> Destroy the enemy tank by adjusting angle and power!<br>
+        <strong>💥 Weapons:</strong> Choose from Normal, Big Bomb, Cluster, or Laser<br>
+        <strong>🏔️ Terrain:</strong> Explosions destroy ground - use it strategically!<br>
+        <strong>🔄 Turns:</strong> Take turns firing until one tank is destroyed
+      </p>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <h2>🏆 VICTORY! 🏆</h2>
+    <p id="winnerText">Player 1 Wins!</p>
+    <p>Final Score: <span id="finalScore">0</span></p>
+    <button class="game-button" onclick="newGame()">🔄 PLAY AGAIN</button>
+  </div>
+
+  <script>
+    // Game variables
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let currentPlayer = 1;
+    let gameState = 'playing'; // playing, gameOver
+    
+    // Store player settings
+    let playerSettings = {
+      angle: 45,
+      power: 50,
+      weapon: 'normal'
+    };
+    
+    // Player stats
+    let players = {
+      1: { health: 100, score: 0, x: 150, y: 0 },
+      2: { health: 100, score: 0, x: 650, y: 0 }
+    };
+    
+    // Terrain data
+    let terrain = [];
+    let terrainHeight = [];
+    
+    // Projectile
+    let projectile = null;
+    let particles = [];
+    let explosions = [];
+    
+    // Weapons
+    const weapons = {
+      normal: { damage: 25, radius: 30, color: '#ffaa00' },
+      big: { damage: 40, radius: 50, color: '#ff6b35' },
+      cluster: { damage: 15, radius: 20, color: '#ff69b4', clusters: 5 },
+      laser: { damage: 35, radius: 15, color: '#00ff41', instant: true }
+    };
+    
+    // Initialize game
+    function init() {
+      generateTerrain();
+      positionTanks();
+      updateUI();
+      gameLoop();
+    }
+    
+    // Generate random terrain
+    function generateTerrain() {
+      terrainHeight = [];
+      const baseHeight = canvas.height * 0.75;
+      
+      // Choose random terrain type
+      const terrainType = Math.floor(Math.random() * 4);
+      
+      for (let x = 0; x < canvas.width; x++) {
+        let height = baseHeight;
+        
+        // Add base rolling hills
+        const wave1 = Math.sin(x * 0.008) * 40;
+        const wave2 = Math.sin(x * 0.003) * 25;
+        
+        // Add terrain-specific features
+        switch (terrainType) {
+          case 0: // Central mountain
+            const mountainPeak = Math.exp(-Math.pow((x - canvas.width/2) / 150, 2)) * 120;
+            height -= mountainPeak;
+            break;
+            
+          case 1: // Valley with hills on sides
+            const valley = Math.exp(-Math.pow((x - canvas.width/2) / 200, 2)) * 80;
+            height += valley;
+            const sideHills = Math.sin(x * 0.015) * 60;
+            height -= Math.abs(sideHills);
+            break;
+            
+          case 2: // Multiple peaks
+            const peak1 = Math.exp(-Math.pow((x - canvas.width*0.3) / 100, 2)) * 90;
+            const peak2 = Math.exp(-Math.pow((x - canvas.width*0.7) / 120, 2)) * 100;
+            height -= Math.max(peak1, peak2);
+            break;
+            
+          case 3: // Plateau with steep sides
+            const plateau = canvas.width * 0.3;
+            const plateauEnd = canvas.width * 0.7;
+            if (x >= plateau && x <= plateauEnd) {
+              height -= 80;
+            } else if (x < plateau) {
+              const slope = Math.max(0, (plateau - x) / 100);
+              height -= 80 * Math.exp(-slope);
+            } else {
+              const slope = Math.max(0, (x - plateauEnd) / 100);
+              height -= 80 * Math.exp(-slope);
+            }
+            break;
+        }
+        
+        // Add base waves and noise
+        height += wave1 + wave2;
+        const noise = (Math.random() - 0.5) * 15;
+        height += noise;
+        
+        // Ensure minimum and maximum heights (bedrock at bottom)
+        const bedrockLevel = canvas.height - 30;
+        terrainHeight[x] = Math.max(80, Math.min(bedrockLevel, height));
+      }
+    }
+    
+    // Position tanks on terrain
+    function positionTanks() {
+      // Bottom of screen acts as solid bedrock - tanks can't go below it
+      const bedrockLevel = canvas.height - 30;
+      
+      players[1].y = Math.min(bedrockLevel, terrainHeight[players[1].x] - 20);
+      players[2].y = Math.min(bedrockLevel, terrainHeight[players[2].x] - 20);
+    }
+    
+    // Draw terrain
+    function drawTerrain() {
+      ctx.fillStyle = '#8B4513';
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height);
+      
+      for (let x = 0; x < canvas.width; x++) {
+        ctx.lineTo(x, terrainHeight[x]);
+      }
+      
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Add grass on top
+      ctx.fillStyle = '#228B22';
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height);
+      
+      for (let x = 0; x < canvas.width; x++) {
+        ctx.lineTo(x, terrainHeight[x] - 5);
+      }
+      
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.closePath();
+      ctx.fill();
+    }
+    
+    // Draw tanks
+    function drawTanks() {
+      // Player 1 tank (green)
+      ctx.fillStyle = '#00ff41';
+      ctx.fillRect(players[1].x - 15, players[1].y - 10, 30, 15);
+      // Barrel
+      const angle1 = (document.getElementById('angleInput').value * Math.PI) / 180;
+      const barrelLength = 25;
+      ctx.strokeStyle = '#00ff41';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(players[1].x, players[1].y - 5);
+      ctx.lineTo(
+        players[1].x + Math.cos(angle1) * barrelLength,
+        players[1].y - 5 - Math.sin(angle1) * barrelLength
+      );
+      ctx.stroke();
+      
+      // Player 2 tank (red)
+      ctx.fillStyle = '#ff6b35';
+      ctx.fillRect(players[2].x - 15, players[2].y - 10, 30, 15);
+      // Barrel (always points left for AI)
+      const angle2 = currentPlayer === 2 ? ((180 - document.getElementById('angleInput').value) * Math.PI) / 180 : Math.PI;
+      ctx.strokeStyle = '#ff6b35';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(players[2].x, players[2].y - 5);
+      ctx.lineTo(
+        players[2].x + Math.cos(angle2) * barrelLength,
+        players[2].y - 5 - Math.sin(angle2) * barrelLength
+      );
+      ctx.stroke();
+    }
+    
+    // Draw projectile
+    function drawProjectile() {
+      if (projectile) {
+        // Draw dark outline for visibility
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(projectile.x, projectile.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw colored projectile
+        ctx.fillStyle = projectile.color;
+        ctx.shadowColor = projectile.color;
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(projectile.x, projectile.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+    
+    // Draw particles
+    function drawParticles() {
+      particles.forEach(particle => {
+        ctx.fillStyle = particle.color;
+        ctx.globalAlpha = particle.life;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+    }
+    
+    // Draw explosions
+    function drawExplosions() {
+      explosions.forEach(explosion => {
+        // Draw flash effect
+        if (explosion.flash > 0) {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.globalAlpha = explosion.flash * 0.8;
+          ctx.beginPath();
+          ctx.arc(explosion.x, explosion.y, explosion.maxRadius * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+        
+        // Draw main explosion circle
+        const gradient = ctx.createRadialGradient(
+          explosion.x, explosion.y, 0,
+          explosion.x, explosion.y, explosion.currentRadius
+        );
+        gradient.addColorStop(0, explosion.color + 'FF'); // Full opacity at center
+        gradient.addColorStop(0.3, explosion.color + 'AA'); // Medium opacity
+        gradient.addColorStop(1, explosion.color + '00'); // Transparent at edge
+        
+        ctx.fillStyle = gradient;
+        ctx.globalAlpha = explosion.life;
+        ctx.beginPath();
+        ctx.arc(explosion.x, explosion.y, explosion.currentRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        
+        // Draw shockwave rings
+        explosion.shockwaves.forEach(wave => {
+          if (wave.radius > 0) {
+            ctx.strokeStyle = explosion.color;
+            ctx.lineWidth = 3;
+            ctx.globalAlpha = wave.opacity * explosion.life;
+            ctx.beginPath();
+            ctx.arc(explosion.x, explosion.y, wave.radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        });
+      });
+    }
+    
+    // Create explosion effect
+    function createExplosion(x, y, color, radius = 30) {
+      explosions.push({
+        x: x,
+        y: y,
+        color: color,
+        maxRadius: radius * 1.5,
+        currentRadius: 0,
+        life: 1,
+        flash: 1,
+        shockwaves: [
+          { radius: 0, opacity: 1, speed: 3 },
+          { radius: 0, opacity: 0.7, speed: 2 },
+          { radius: 0, opacity: 0.4, speed: 1.5 }
+        ]
+      });
+      
+      // Add some debris particles for extra effect
+      for (let i = 0; i < 8; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6 - 2,
+          size: Math.random() * 3 + 1,
+          color: '#8B4513', // Brown debris
+          life: 1,
+          decay: 0.015
+        });
+      }
+    }
+    
+    // Update particles
+    function updateParticles() {
+      particles = particles.filter(particle => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.vy += 0.2; // gravity
+        particle.life -= particle.decay;
+        return particle.life > 0;
+      });
+    }
+    
+    // Update explosions
+    function updateExplosions() {
+      explosions = explosions.filter(explosion => {
+        // Expand main explosion
+        if (explosion.currentRadius < explosion.maxRadius) {
+          explosion.currentRadius += 4;
+        }
+        
+        // Update flash
+        explosion.flash -= 0.1;
+        
+        // Update shockwaves
+        explosion.shockwaves.forEach(wave => {
+          wave.radius += wave.speed;
+          wave.opacity -= 0.02;
+        });
+        
+        // Fade out explosion
+        explosion.life -= 0.02;
+        
+        return explosion.life > 0;
+      });
+    }
+    
+    // Fire projectile
+    function fire() {
+      if (projectile || gameState !== 'playing') return;
+      
+      const angle = (document.getElementById('angleInput').value * Math.PI) / 180;
+      const power = document.getElementById('powerInput').value / 6; // Slower projectile speed
+      const weaponType = document.getElementById('weaponSelect').value;
+      
+      const tank = players[currentPlayer];
+      let startAngle = angle;
+      
+      // Adjust angle for player 2 (facing left)
+      if (currentPlayer === 2) {
+        startAngle = Math.PI - angle;
+      }
+      
+      projectile = {
+        x: tank.x,
+        y: tank.y - 5,
+        vx: Math.cos(startAngle) * power,
+        vy: -Math.sin(startAngle) * power,
+        type: weaponType,
+        player: currentPlayer,
+        color: currentPlayer === 1 ? '#ffff00' : '#ff0000' // Bright yellow for player 1, bright red for AI
+      };
+      
+      // Laser is instant
+      if (weaponType === 'laser') {
+        handleLaser();
+      }
+    }
+    
+    // Handle laser weapon
+    function handleLaser() {
+      const weapon = weapons.laser;
+      const startX = projectile.x;
+      const startY = projectile.y;
+      
+      // Find intersection with terrain or tank
+      let hitX = startX;
+      let hitY = startY;
+      
+      for (let i = 0; i < 800; i++) {
+        hitX += projectile.vx;
+        hitY += projectile.vy;
+        
+        if (hitX < 0 || hitX >= canvas.width || hitY >= canvas.height) break;
+        if (hitY >= terrainHeight[Math.floor(hitX)]) {
+          // Hit terrain
+          explode(hitX, hitY, weapon);
+          break;
+        }
+        
+        // Check tank collision
+        if (checkTankCollision(hitX, hitY)) {
+          explode(hitX, hitY, weapon);
+          break;
+        }
+      }
+      
+      // Draw laser beam
+      ctx.strokeStyle = projectile.color;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = projectile.color;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(hitX, hitY);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      
+      projectile = null;
+      setTimeout(() => {
+        switchTurn();
+      }, 1000);
+    }
+    
+    // Update projectile
+    function updateProjectile() {
+      if (!projectile || projectile.type === 'laser') return;
+      
+      projectile.x += projectile.vx;
+      projectile.y += projectile.vy;
+      projectile.vy += 0.2; // reduced gravity for slower arcs
+      
+      // Check bounds
+      if (projectile.x < 0 || projectile.x >= canvas.width || projectile.y >= canvas.height) {
+        projectile = null;
+        switchTurn();
+        return;
+      }
+      
+      // Check terrain collision
+      if (projectile.y >= terrainHeight[Math.floor(projectile.x)]) {
+        explode(projectile.x, projectile.y, weapons[projectile.type]);
+        projectile = null;
+        setTimeout(() => {
+          switchTurn();
+        }, 1000);
+        return;
+      }
+      
+      // Check tank collision
+      if (checkTankCollision(projectile.x, projectile.y)) {
+        explode(projectile.x, projectile.y, weapons[projectile.type]);
+        projectile = null;
+        setTimeout(() => {
+          switchTurn();
+        }, 1000);
+      }
+    }
+    
+    // Check tank collision
+    function checkTankCollision(x, y) {
+      for (let player in players) {
+        const tank = players[player];
+        if (x >= tank.x - 15 && x <= tank.x + 15 && 
+            y >= tank.y - 10 && y <= tank.y + 5) {
+          return player;
+        }
+      }
+      return false;
+    }
+    
+    // Explode
+    function explode(x, y, weapon) {
+      createExplosion(x, y, weapon.color, weapon.radius);
+      
+      // Damage terrain (but not below bedrock level)
+      const bedrockLevel = canvas.height - 30;
+      for (let i = -weapon.radius; i <= weapon.radius; i++) {
+        const terrainX = Math.floor(x + i);
+        if (terrainX >= 0 && terrainX < canvas.width) {
+          const distance = Math.abs(i);
+          const damage = weapon.radius - distance;
+          if (damage > 0) {
+            terrainHeight[terrainX] = Math.min(bedrockLevel, terrainHeight[terrainX] + damage);
+          }
+        }
+      }
+      
+      // Damage tanks
+      for (let player in players) {
+        const tank = players[player];
+        const distance = Math.sqrt((x - tank.x) ** 2 + (y - tank.y) ** 2);
+        if (distance <= weapon.radius) {
+          const damage = Math.round(Math.max(0, weapon.damage * (1 - distance / weapon.radius)));
+          players[player].health -= damage;
+          players[currentPlayer].score += damage;
+          
+          if (players[player].health <= 0) {
+            players[player].health = 0;
+            gameOver(currentPlayer);
+          }
+        }
+      }
+      
+      // Cluster bomb creates additional explosions
+      if (weapon.clusters) {
+        setTimeout(() => {
+          for (let i = 0; i < weapon.clusters; i++) {
+            const clusterX = x + (Math.random() - 0.5) * 100;
+            const clusterY = y + (Math.random() - 0.5) * 50;
+            if (clusterX >= 0 && clusterX < canvas.width && clusterY >= 0) {
+              explode(clusterX, clusterY, { ...weapon, clusters: 0 });
+            }
+          }
+        }, 500);
+      }
+      
+      // Reposition tanks on terrain
+      positionTanks();
+      updateUI();
+    }
+    
+    // Switch turn
+    function switchTurn() {
+      // Save player settings before switching
+      if (currentPlayer === 1) {
+        playerSettings.angle = document.getElementById('angleInput').value;
+        playerSettings.power = document.getElementById('powerInput').value;
+        playerSettings.weapon = document.getElementById('weaponSelect').value;
+      }
+      
+      currentPlayer = currentPlayer === 1 ? 2 : 1;
+      updateTurnIndicator();
+      
+      // Restore player settings when it's player 1's turn
+      if (currentPlayer === 1) {
+        document.getElementById('angleInput').value = playerSettings.angle;
+        document.getElementById('powerInput').value = playerSettings.power;
+        document.getElementById('weaponSelect').value = playerSettings.weapon;
+      }
+      
+      // Simple AI for player 2
+      if (currentPlayer === 2) {
+        setTimeout(() => {
+          aiTurn();
+        }, 1000);
+      }
+    }
+    
+    // AI turn
+    function aiTurn() {
+      if (gameState !== 'playing') return;
+      
+      // Simple AI: aim roughly at player 1 with some randomness
+      const targetX = players[1].x;
+      const targetY = players[1].y;
+      const tankX = players[2].x;
+      const tankY = players[2].y;
+      
+      const distance = Math.abs(targetX - tankX);
+      const heightDiff = tankY - targetY;
+      
+      // Calculate rough angle and power
+      let angle = Math.atan2(heightDiff, distance) * 180 / Math.PI;
+      angle = Math.max(10, Math.min(170, angle + (Math.random() - 0.5) * 30));
+      
+      let power = Math.min(100, distance / 3.5 + (Math.random() - 0.5) * 20); // Adjusted for slower projectile speed
+      power = Math.max(35, power);
+      
+      // Choose random weapon
+      const weaponTypes = ['normal', 'big', 'cluster', 'laser'];
+      const weapon = weaponTypes[Math.floor(Math.random() * weaponTypes.length)];
+      
+      document.getElementById('angleInput').value = Math.round(angle);
+      document.getElementById('powerInput').value = Math.round(power);
+      document.getElementById('weaponSelect').value = weapon;
+      
+      setTimeout(() => {
+        fire();
+      }, 500);
+    }
+    
+    // Update UI
+    function updateUI() {
+      document.getElementById('health1').style.width = players[1].health + '%';
+      document.getElementById('health2').style.width = players[2].health + '%';
+      document.getElementById('score1').textContent = Math.round(players[1].score) + ' pts';
+      document.getElementById('score2').textContent = Math.round(players[2].score) + ' pts';
+    }
+    
+    // Update turn indicator
+    function updateTurnIndicator() {
+      const indicator = document.getElementById('turnIndicator');
+      if (currentPlayer === 1) {
+        indicator.textContent = '🎯 PLAYER 1\'S TURN';
+        indicator.className = 'turn-indicator player1';
+      } else {
+        indicator.textContent = '🤖 AI TURN';
+        indicator.className = 'turn-indicator player2';
+      }
+    }
+    
+    // Game over
+    function gameOver(winner) {
+      gameState = 'gameOver';
+      document.getElementById('winnerText').textContent = 
+        winner === 1 ? '🟢 PLAYER 1 WINS!' : '🔴 AI WINS!';
+      document.getElementById('finalScore').textContent = Math.round(players[winner].score);
+      document.getElementById('gameOver').style.display = 'block';
+    }
+    
+    // New game
+    function newGame() {
+      gameState = 'playing';
+      currentPlayer = 1;
+      players[1] = { health: 100, score: 0, x: 150, y: 0 };
+      players[2] = { health: 100, score: 0, x: 650, y: 0 };
+      projectile = null;
+      particles = [];
+      explosions = [];
+      
+      generateTerrain();
+      positionTanks();
+      updateUI();
+      updateTurnIndicator();
+      
+      document.getElementById('gameOver').style.display = 'none';
+      
+      // Reset player settings to defaults for new game
+      playerSettings = { angle: 45, power: 50, weapon: 'normal' };
+      document.getElementById('angleInput').value = playerSettings.angle;
+      document.getElementById('powerInput').value = playerSettings.power;
+      document.getElementById('weaponSelect').value = playerSettings.weapon;
+    }
+    
+    // Reset terrain only
+    function resetTerrain() {
+      generateTerrain();
+      positionTanks();
+      projectile = null;
+      particles = [];
+      explosions = [];
+    }
+    
+    // Game loop
+    function gameLoop() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw sky gradient
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#87CEEB');
+      gradient.addColorStop(0.7, '#98FB98');
+      gradient.addColorStop(1, '#8B4513');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw game elements
+      drawTerrain();
+      drawTanks();
+      drawProjectile();
+      drawExplosions();
+      drawParticles();
+      
+      // Update game state
+      updateProjectile();
+      updateExplosions();
+      updateParticles();
+      
+      requestAnimationFrame(gameLoop);
+    }
+    
+    // Initialize game
+    init();
+  </script>
+</body>
+</html>

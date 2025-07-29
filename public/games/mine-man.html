@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mine-Man - Andy's Epic Gaming Zone! ⛏️</title>
+  <style>
+    :root {
+      --primary-color: #00ff41;
+      --secondary-color: #ffaa00;
+      --danger-color: #ff6b35;
+      --background-dark: #0a0a0a;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    
+    .back-button {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      padding: 0.75rem 1.5rem;
+      background: #4ecdc4;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .back-button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    }
+    
+    .game-header {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(20, 20, 30, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 100;
+      margin-bottom: 1rem;
+    }
+    
+    .game-header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    }
+    
+    .main-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+    }
+
+    .game-container {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 50px rgba(0, 255, 65, 0.3);
+      backdrop-filter: blur(10px);
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: rgba(0, 255, 65, 0.1);
+      border-radius: 10px;
+      border: 1px solid var(--primary-color);
+      width: 100%;
+    }
+
+    .info-item {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .score { color: var(--secondary-color); }
+    .level { color: var(--primary-color); }
+    .lives { color: var(--danger-color); }
+
+    .game-canvas {
+      border: 3px solid var(--primary-color);
+      border-radius: 10px;
+      background: #000;
+      display: block;
+      margin: 0 auto 1rem;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .game-button {
+      background: linear-gradient(45deg, var(--primary-color), #00cc33);
+      color: var(--background-dark);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 255, 65, 0.3);
+    }
+
+    .game-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 65, 0.5);
+    }
+
+    .instructions {
+      text-align: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(0, 255, 65, 0.1);
+      border-radius: 10px;
+      border: 1px solid var(--primary-color);
+    }
+
+    .instructions h3 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .instructions p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .mob-info {
+      display: flex;
+      justify-content: space-around;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .mob-card {
+      background: rgba(76, 175, 80, 0.1);
+      border: 1px solid #4caf50;
+      border-radius: 8px;
+      padding: 0.5rem;
+      margin: 0.25rem;
+      text-align: center;
+      min-width: 100px;
+    }
+    
+    .mob-card h4 {
+      margin: 0 0 0.25rem 0;
+      color: #4caf50;
+    }
+    
+    .mob-card p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    
+    .leaderboard {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid #4ecdc4;
+      display: none;
+      z-index: 200;
+      min-width: 400px;
+      max-width: 90vw;
+      box-shadow: 0 0 50px rgba(78, 205, 196, 0.5);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .leaderboard h2 {
+      color: #4ecdc4;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px #4ecdc4;
+    }
+    
+    .leaderboard-list {
+      margin: 1rem 0;
+      text-align: left;
+    }
+    
+    .leaderboard-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      background: rgba(78, 205, 196, 0.1);
+      border-radius: 5px;
+      border-left: 3px solid #4ecdc4;
+    }
+    
+    .leaderboard-entry.new-score {
+      background: rgba(255, 170, 0, 0.2);
+      border-left-color: #ffaa00;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    .high-score-input {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid #ffaa00;
+      z-index: 300;
+      min-width: 350px;
+      box-shadow: 0 0 50px rgba(255, 170, 0, 0.5);
+    }
+    
+    .high-score-input h2 {
+      color: #ffaa00;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #ffaa00;
+    }
+    .creeper { color: #32CD32; }
+    .drowned { color: #4682B4; }
+
+    .game-over, .game-start {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid var(--secondary-color);
+      z-index: 100;
+      min-width: 300px;
+      box-shadow: 0 0 50px rgba(255, 170, 0, 0.5);
+    }
+
+    .game-over h2, .game-start h2 {
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px var(--secondary-color);
+    }
+
+    @media (max-width: 768px) {
+      .game-canvas {
+        width: 90vw !important;
+        height: 90vw !important;
+        max-width: 400px !important;
+        max-height: 400px !important;
+      }
+      
+      .game-info {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+      
+      .mob-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .back-button {
+        position: static;
+        display: block;
+        margin: 1rem auto;
+        width: fit-content;
+      }
+      
+      .game-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-button">🏠 Back to Gaming Zone</a>
+  
+  <div class="game-header">
+    <h1>⛏️ MINE-MAN ⛏️</h1>
+  </div>
+  
+  <div class="main-wrapper">
+    <div class="game-container">
+      
+      <div class="game-info">
+        <div class="info-item score">
+          SCORE: <span id="score">0</span>
+        </div>
+        <div class="info-item level">
+          LEVEL: <span id="level">1</span>
+        </div>
+        <div class="info-item lives">
+          LIVES: <span id="lives">3</span>
+        </div>
+      </div>
+      
+      <canvas id="gameCanvas" class="game-canvas" width="600" height="600"></canvas>
+      
+      <div class="controls">
+        <button class="game-button" onclick="startGame()">🎮 START GAME</button>
+        <button class="game-button" onclick="pauseGame()">⏸️ PAUSE</button>
+        <button class="game-button" onclick="resetGame()">🔄 RESET</button>
+        <button class="game-button" onclick="showLeaderboard()">🏆 LEADERBOARD</button>
+      </div>
+      
+      <div class="instructions">
+        <h3>🎮 HOW TO PLAY</h3>
+        <p><strong>⛏️ Objective:</strong> Guide Steve through the mine, collect all diamonds while avoiding Minecraft mobs!</p>
+        <p><strong>🎮 Controls:</strong> Use ARROW KEYS or WASD to move Steve around the maze</p>
+        <p><strong>💎 Collect:</strong> Small diamonds (10 points) and large emeralds (50 points + temporary invincibility)</p>
+        <p><strong>👾 Avoid:</strong> Minecraft mobs - they'll hurt Steve! Use emeralds to fight back!</p>
+        
+        <div class="mob-info">
+          <div class="mob-card">
+            <div class="mob-name zombie">🧟 ZOMBIE</div>
+            <div>Slow but persistent</div>
+          </div>
+          <div class="mob-card">
+            <div class="mob-name enderman">👤 ENDERMAN</div>
+            <div>Teleports randomly</div>
+          </div>
+          <div class="mob-card">
+            <div class="mob-name creeper">💚 CREEPER</div>
+            <div>Fast and aggressive</div>
+          </div>
+          <div class="mob-card">
+            <div class="mob-name drowned">🌊 DROWNED</div>
+            <div>Unpredictable movement</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-start" id="gameStart">
+    <h2>⛏️ MINE-MAN ⛏️</h2>
+    <p>Help Steve collect all the diamonds!</p>
+    <p>Avoid the Minecraft mobs and use emeralds for power!</p>
+    <button class="game-button" onclick="startGame()">🎮 START MINING!</button>
+  </div>
+
+  <div class="game-over" id="gameOver" style="display: none;">
+    <h2 id="gameOverTitle">💀 GAME OVER! 💀</h2>
+    <p id="gameOverText">Steve was defeated by the mobs!</p>
+    <p>Final Score: <span id="finalScore">0</span></p>
+    <button class="game-button" onclick="resetGame()">🔄 TRY AGAIN</button>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div class="leaderboard" id="leaderboard">
+    <h2>🏆 MINE-MAN LEADERBOARD 🏆</h2>
+    <div class="leaderboard-list" id="leaderboardList">
+      <!-- Leaderboard entries will be populated here -->
+    </div>
+    <button class="game-button" onclick="hideLeaderboard()">✖️ CLOSE</button>
+  </div>
+
+  <!-- High Score Input Modal -->
+  <div class="high-score-input" id="highScoreInput" style="display: none;">
+    <h2>🏆 NEW HIGH SCORE! 🏆</h2>
+    <p>Congratulations! You made it to the leaderboard!</p>
+    <p>Score: <span id="newHighScore">0</span> | Level: <span id="newHighLevel">1</span></p>
+    <input type="text" id="playerName" placeholder="Enter your name" maxlength="15" style="padding: 0.5rem; margin: 1rem; border-radius: 5px; border: 1px solid #4ecdc4; background: rgba(0,0,0,0.8); color: white; text-align: center;">
+    <br>
+    <button class="game-button" onclick="submitScore()">🏆 SUBMIT SCORE</button>
+  </div>
+
+  <script>
+    // Game variables
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let gameState = 'start';
+    let score = 0;
+    let level = 1;
+    let lives = 3;
+    let gameLoop = null;
+    
+    const GRID_SIZE = 20;
+    const COLS = canvas.width / GRID_SIZE;
+    const ROWS = canvas.height / GRID_SIZE;
+    
+    // Player (Steve)
+    let player = {
+      x: 1,
+      y: 1,
+      direction: 'right',
+      nextDirection: 'right',
+      invincible: false,
+      invincibleTime: 0
+    };
+    
+    // Mobs
+    let mobs = [];
+    let diamonds = [];
+    let emeralds = [];
+    let maze = [];
+    
+    // 5 different maze layouts with progressive difficulty
+    const mazePatterns = {
+      1: [ // Level 1 - Simple and open
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,3,1,1,1,1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,1,1,1,3,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,1,1,1,1,1,1,1],
+      [2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2],
+      [1,1,1,1,1,1,2,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,2,1],
+      [1,3,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,3,2,1],
+      [1,1,2,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,2,1,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ],
+    2: [ // Level 2 - More complex
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,3,1,1,1,1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,1,1,1,3,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1],
+      [1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,1,1,1,1,1,1,1],
+      [2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2],
+      [1,1,1,1,1,1,2,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,2,1],
+      [1,3,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,3,2,1],
+      [1,2,2,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,2,1,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ],
+    3: [ // Level 3 - Complex
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,3,1,1,1,1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,1,1,1,3,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1],
+      [1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,2,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,2,1],
+      [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,1,1,1,1,1,1,1],
+      [2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2],
+      [1,1,1,1,1,1,2,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,2,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,1,1,2,1,1,1,1,1,1,1,1,1,2,1,1,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,1,1,2,1],
+      [1,2,1,2,2,2,2,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,2,2,2,2,1,2,2,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,1,2,1,1],
+      [1,2,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,2,2,1],
+      [1,3,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,3,1,1],
+      [1,2,2,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,1,1,2,2,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ],
+    4: [ // Level 4 - Advanced
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,3,1,1,1,1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,1,1,1,3,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1],
+      [1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,2,1],
+      [1,2,1,2,1,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,1,2,1,2,1],
+      [1,2,1,2,1,2,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,2,1,2,1,2,1,1],
+      [1,2,1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,2,1,1],
+      [1,2,1,2,1,1,1,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,1,1,1,2,1,2,1,1],
+      [1,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,1,1],
+      [1,2,1,1,1,1,1,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2,1,1],
+      [1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,1,1],
+      [1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,1,1],
+      [1,2,1,1,1,1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,1,1,1,1,1,1,1,2,1,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,1,2,1,1],
+      [1,3,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,3,1,1],
+      [1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,2,2,1,2,1],
+      [1,2,1,2,2,2,2,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,1,2,1],
+      [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ],
+    5: [ // Level 5+ - Expert (repeats for level 5+)
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,3,1,1,1,1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,1,1,1,3,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1],
+      [1,2,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,2,1,2,1],
+      [1,2,1,2,1,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,1,2,1,2,1],
+      [1,2,1,2,1,2,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,2,1,2,1,2,1,1],
+      [1,2,1,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,1,2,1,1],
+      [1,2,1,2,1,1,1,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,1,1,1,2,1,2,1,1],
+      [1,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,2,1,1],
+      [1,2,1,1,1,1,1,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,1,1,1,1,1,2,1,1],
+      [1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,1,1],
+      [1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,2,1,1,2,1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,1,1],
+      [1,2,1,1,1,1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,1,1,1,1,1,1,1,2,1,1],
+      [1,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,1,2,1,1],
+      [1,3,1,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,3,1,1],
+      [1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,2,2,1,2,1],
+      [1,2,1,2,2,2,2,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,2,2,2,2,2,1,2,1],
+      [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ]
+  };
+    
+    function initGame() {
+      createMaze();
+      resetPlayer();
+      createMobs();
+      updateUI();
+    }
+    
+    function createMaze() {
+      maze = [];
+      diamonds = [];
+      emeralds = [];
+      
+      // Use appropriate maze pattern based on level (max level 5)
+      const currentLevel = Math.min(level, 5);
+      const currentMazePattern = mazePatterns[currentLevel];
+      
+      for (let row = 0; row < ROWS; row++) {
+        maze[row] = [];
+        for (let col = 0; col < COLS; col++) {
+          if (row < currentMazePattern.length && col < currentMazePattern[row].length) {
+            maze[row][col] = currentMazePattern[row][col];
+            if (currentMazePattern[row][col] === 2) {
+              diamonds.push({ x: col, y: row });
+            } else if (currentMazePattern[row][col] === 3) {
+              emeralds.push({ x: col, y: row });
+            }
+          } else {
+            maze[row][col] = 1;
+          }
+        }
+      }
+    }
+    
+    function resetPlayer() {
+      player = {
+        x: 1,
+        y: 1,
+        direction: 'right',
+        nextDirection: 'right',
+        invincible: false,
+        invincibleTime: 0
+      };
+    }
+    
+    function createMobs() {
+      mobs = [
+        { x: 13, y: 13, direction: 'up', type: 'zombie', color: '#90EE90', speed: 0.8, moveCounter: 0, spawnX: 13, spawnY: 13 },
+        { x: 15, y: 13, direction: 'down', type: 'enderman', color: '#800080', speed: 1.0, moveCounter: 0, spawnX: 15, spawnY: 13 },
+        { x: 13, y: 15, direction: 'left', type: 'creeper', color: '#32CD32', speed: 1.2, moveCounter: 0, spawnX: 13, spawnY: 15 },
+        { x: 15, y: 15, direction: 'right', type: 'drowned', color: '#4682B4', speed: 1.0, moveCounter: 0, spawnX: 15, spawnY: 15 }
+      ];
+    }
+    
+    function canMoveTo(x, y) {
+      if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return false;
+      return maze[y][x] !== 1;
+    }
+    
+    function updatePlayer() {
+      let newX = player.x;
+      let newY = player.y;
+      
+      switch (player.nextDirection) {
+        case 'up': newY--; break;
+        case 'down': newY++; break;
+        case 'left': newX--; break;
+        case 'right': newX++; break;
+      }
+      
+      if (canMoveTo(newX, newY)) {
+        player.direction = player.nextDirection;
+        player.x = newX;
+        player.y = newY;
+      }
+      
+      if (player.invincible) {
+        player.invincibleTime--;
+        if (player.invincibleTime <= 0) {
+          player.invincible = false;
+        }
+      }
+      
+      // Collect diamonds
+      for (let i = diamonds.length - 1; i >= 0; i--) {
+        if (diamonds[i].x === player.x && diamonds[i].y === player.y) {
+          diamonds.splice(i, 1);
+          score += 10;
+          updateUI();
+        }
+      }
+      
+      // Collect emeralds
+      for (let i = emeralds.length - 1; i >= 0; i--) {
+        if (emeralds[i].x === player.x && emeralds[i].y === player.y) {
+          emeralds.splice(i, 1);
+          score += 50;
+          player.invincible = true;
+          player.invincibleTime = 300;
+          updateUI();
+        }
+      }
+      
+      if (diamonds.length === 0 && emeralds.length === 0) {
+        nextLevel();
+      }
+    }
+    
+    function updateMobs() {
+      mobs.forEach(mob => {
+        mob.moveCounter += mob.speed;
+        if (mob.moveCounter >= 10) {
+          mob.moveCounter = 0;
+          
+          const directions = ['up', 'down', 'left', 'right'];
+          let possibleMoves = [];
+          
+          directions.forEach(dir => {
+            let newX = mob.x;
+            let newY = mob.y;
+            
+            switch (dir) {
+              case 'up': newY--; break;
+              case 'down': newY++; break;
+              case 'left': newX--; break;
+              case 'right': newX++; break;
+            }
+            
+            if (canMoveTo(newX, newY)) {
+              possibleMoves.push({ dir, x: newX, y: newY });
+            }
+          });
+          
+          if (possibleMoves.length > 0) {
+            if (mob.type === 'enderman' && Math.random() < 0.05) {
+              // Enderman teleport
+              let attempts = 0;
+              while (attempts < 20) {
+                const newX = Math.floor(Math.random() * COLS);
+                const newY = Math.floor(Math.random() * ROWS);
+                if (canMoveTo(newX, newY)) {
+                  mob.x = newX;
+                  mob.y = newY;
+                  break;
+                }
+                attempts++;
+              }
+            } else {
+              // Normal movement
+              if (Math.random() < 0.7) {
+                // Move toward player
+                const playerDist = possibleMoves.map(move => {
+                  const dx = move.x - player.x;
+                  const dy = move.y - player.y;
+                  return { ...move, dist: Math.sqrt(dx * dx + dy * dy) };
+                });
+                
+                playerDist.sort((a, b) => a.dist - b.dist);
+                const move = playerDist[0];
+                mob.x = move.x;
+                mob.y = move.y;
+                mob.direction = move.dir;
+              } else {
+                // Random movement
+                const move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+                mob.x = move.x;
+                mob.y = move.y;
+                mob.direction = move.dir;
+              }
+            }
+          }
+        }
+        
+        // Check collision with player
+        if (mob.x === player.x && mob.y === player.y) {
+          if (player.invincible) {
+            // Send mob back to spawn position
+            mob.x = mob.spawnX;
+            mob.y = mob.spawnY;
+            mob.direction = 'up'; // Reset direction
+            mob.moveCounter = 0; // Reset movement counter
+            score += 100;
+            updateUI();
+          } else {
+            // Player loses life
+            lives--;
+            updateUI();
+            if (lives <= 0) {
+              gameOver();
+            } else {
+              resetPlayer();
+            }
+          }
+        }
+      });
+    }
+    
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      drawMaze();
+      drawDiamonds();
+      drawEmeralds();
+      drawPlayer();
+      drawMobs();
+      drawInvincibilityTimer();
+    }
+    
+    function drawInvincibilityTimer() {
+      if (player.invincible && player.invincibleTime > 0) {
+        const barWidth = 200;
+        const barHeight = 8;
+        const x = (canvas.width - barWidth) / 2;
+        const y = 10;
+        
+        // Background bar
+        ctx.fillStyle = '#333333';
+        ctx.fillRect(x, y, barWidth, barHeight);
+        
+        // Timer bar
+        const timePercent = player.invincibleTime / 300; // 300 is max time
+        const currentWidth = barWidth * timePercent;
+        
+        // Color changes based on time left
+        if (timePercent > 0.5) {
+          ctx.fillStyle = '#00FF00'; // Green when safe
+        } else if (timePercent > 0.2) {
+          ctx.fillStyle = '#FFFF00'; // Yellow when warning
+        } else {
+          ctx.fillStyle = '#FF0000'; // Red when critical
+        }
+        
+        ctx.fillRect(x, y, currentWidth, barHeight);
+        
+        // Border
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, barWidth, barHeight);
+        
+        // Text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('POWER TIME', x + barWidth / 2, y + barHeight + 15);
+      }
+    }
+    
+    function drawMaze() {
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          const x = col * GRID_SIZE;
+          const y = row * GRID_SIZE;
+          
+          if (maze[row][col] === 1) {
+            ctx.fillStyle = '#666666';
+            ctx.fillRect(x, y, GRID_SIZE, GRID_SIZE);
+            ctx.strokeStyle = '#444444';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, GRID_SIZE, GRID_SIZE);
+          } else {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x, y, GRID_SIZE, GRID_SIZE);
+          }
+        }
+      }
+    }
+    
+    function drawDiamonds() {
+      ctx.fillStyle = '#00FFFF';
+      diamonds.forEach(diamond => {
+        const x = diamond.x * GRID_SIZE + GRID_SIZE / 2;
+        const y = diamond.y * GRID_SIZE + GRID_SIZE / 2;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(x - 1, y - 1, 1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#00FFFF';
+      });
+    }
+    
+    function drawEmeralds() {
+      emeralds.forEach(emerald => {
+        const x = emerald.x * GRID_SIZE + GRID_SIZE / 2;
+        const y = emerald.y * GRID_SIZE + GRID_SIZE / 2;
+        
+        const pulse = Math.sin(Date.now() * 0.01) * 2 + 8;
+        
+        ctx.fillStyle = '#00FF00';
+        ctx.beginPath();
+        ctx.arc(x, y, pulse, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(x, y, pulse - 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#00FF00';
+        ctx.beginPath();
+        ctx.arc(x, y, pulse - 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+    
+    function drawPlayer() {
+      const x = player.x * GRID_SIZE + GRID_SIZE / 2;
+      const y = player.y * GRID_SIZE + GRID_SIZE / 2;
+      
+      // Steve's head
+      ctx.fillStyle = player.invincible ? '#FFFF00' : '#8B4513';
+      ctx.fillRect(x - 8, y - 8, 16, 16);
+      
+      // Face
+      ctx.fillStyle = player.invincible ? '#FFFF88' : '#FDBCB4';
+      ctx.fillRect(x - 6, y - 6, 12, 12);
+      
+      // Eyes
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(x - 4, y - 4, 2, 2);
+      ctx.fillRect(x + 2, y - 4, 2, 2);
+      
+      // Mouth
+      switch (player.direction) {
+        case 'right': ctx.fillRect(x + 2, y, 2, 2); break;
+        case 'left': ctx.fillRect(x - 4, y, 2, 2); break;
+        case 'up': ctx.fillRect(x - 1, y - 2, 2, 2); break;
+        case 'down': ctx.fillRect(x - 1, y + 2, 2, 2); break;
+      }
+    }
+    
+    function drawMobs() {
+      mobs.forEach(mob => {
+        const x = mob.x * GRID_SIZE + GRID_SIZE / 2;
+        const y = mob.y * GRID_SIZE + GRID_SIZE / 2;
+        
+        // Determine mob color based on invincibility state
+        let mobColor = mob.color;
+        let isFlashing = false;
+        
+        if (player.invincible) {
+          if (player.invincibleTime > 60) {
+            // Safe blue color when plenty of time left
+            mobColor = '#0000FF';
+          } else {
+            // Flash between blue and original color when time is running out
+            isFlashing = true;
+            mobColor = Math.floor(Date.now() / 200) % 2 === 0 ? '#0000FF' : mob.color;
+          }
+        }
+        
+        ctx.fillStyle = mobColor;
+        
+        switch (mob.type) {
+          case 'zombie':
+            ctx.fillRect(x - 8, y - 8, 16, 16);
+            ctx.fillStyle = player.invincible && !isFlashing ? '#4444FF' : '#654321';
+            if (isFlashing && Math.floor(Date.now() / 200) % 2 === 0) {
+              ctx.fillStyle = '#4444FF';
+            }
+            ctx.fillRect(x - 6, y - 6, 12, 8);
+            break;
+          case 'enderman':
+            ctx.fillRect(x - 6, y - 10, 12, 20);
+            ctx.fillStyle = player.invincible && !isFlashing ? '#FF88FF' : '#FF00FF';
+            if (isFlashing && Math.floor(Date.now() / 200) % 2 === 0) {
+              ctx.fillStyle = '#FF88FF';
+            }
+            ctx.fillRect(x - 4, y - 8, 2, 2);
+            ctx.fillRect(x + 2, y - 8, 2, 2);
+            break;
+          case 'creeper':
+            ctx.fillRect(x - 8, y - 8, 16, 16);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x - 6, y - 6, 3, 3);
+            ctx.fillRect(x + 3, y - 6, 3, 3);
+            ctx.fillRect(x - 2, y - 2, 4, 6);
+            break;
+          case 'drowned':
+            ctx.fillRect(x - 8, y - 8, 16, 16);
+            ctx.fillStyle = player.invincible && !isFlashing ? '#AACCEE' : '#87CEEB';
+            if (isFlashing && Math.floor(Date.now() / 200) % 2 === 0) {
+              ctx.fillStyle = '#AACCEE';
+            }
+            ctx.fillRect(x - 6, y - 6, 12, 8);
+            break;
+        }
+        
+        // Eyes color based on state
+        if (player.invincible) {
+          ctx.fillStyle = isFlashing && Math.floor(Date.now() / 200) % 2 === 1 ? '#FF0000' : '#FFFFFF';
+        } else {
+          ctx.fillStyle = '#FF0000';
+        }
+        ctx.fillRect(x - 4, y - 6, 2, 2);
+        ctx.fillRect(x + 2, y - 6, 2, 2);
+        
+        // Add warning indicator when flashing
+        if (isFlashing) {
+          ctx.fillStyle = '#FFFF00';
+          ctx.font = '12px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('!', x, y - 12);
+        }
+      });
+    }
+    
+    function updateUI() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('level').textContent = level;
+      document.getElementById('lives').textContent = lives;
+    }
+    
+    function nextLevel() {
+      level++;
+      score += 100;
+      createMaze();
+      resetPlayer();
+      mobs.forEach(mob => {
+        mob.speed += 0.1;
+      });
+      updateUI();
+    }
+    
+    function gameOver() {
+      gameState = 'gameOver';
+      if (gameLoop) clearInterval(gameLoop);
+      
+      // Check if score qualifies for leaderboard
+      if (isHighScore(score)) {
+        document.getElementById('newHighScore').textContent = score;
+        document.getElementById('newHighLevel').textContent = level;
+        document.getElementById('playerName').value = '';
+        document.getElementById('highScoreInput').style.display = 'block';
+      } else {
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('gameOver').style.display = 'block';
+      }
+    }
+    
+    function startGame() {
+      if (gameState === 'start' || gameState === 'gameOver') {
+        score = 0;
+        level = 1;
+        lives = 3;
+        initGame();
+      }
+      
+      gameState = 'playing';
+      document.getElementById('gameStart').style.display = 'none';
+      document.getElementById('gameOver').style.display = 'none';
+      
+      if (gameLoop) clearInterval(gameLoop);
+      gameLoop = setInterval(() => {
+        if (gameState === 'playing') {
+          updatePlayer();
+          updateMobs();
+          draw();
+        }
+      }, 100);
+    }
+    
+    function pauseGame() {
+      if (gameState === 'playing') {
+        gameState = 'paused';
+        if (gameLoop) clearInterval(gameLoop);
+      } else if (gameState === 'paused') {
+        gameState = 'playing';
+        gameLoop = setInterval(() => {
+          if (gameState === 'playing') {
+            updatePlayer();
+            updateMobs();
+            draw();
+          }
+        }, 100);
+      }
+    }
+    
+    function resetGame() {
+      gameState = 'start';
+      if (gameLoop) clearInterval(gameLoop);
+      score = 0;
+      level = 1;
+      lives = 3;
+      initGame();
+      draw();
+      document.getElementById('gameStart').style.display = 'block';
+      document.getElementById('gameOver').style.display = 'none';
+    }
+    
+    // Controls
+    document.addEventListener('keydown', (e) => {
+      if (gameState !== 'playing') return;
+      
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          player.nextDirection = 'up';
+          e.preventDefault();
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          player.nextDirection = 'down';
+          e.preventDefault();
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          player.nextDirection = 'left';
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          player.nextDirection = 'right';
+          e.preventDefault();
+          break;
+      }
+    });
+    
+    // Leaderboard system
+    let leaderboard = [];
+    let newScoreIndex = -1;
+    
+    // Leaderboard functions
+    function loadLeaderboard() {
+      const saved = localStorage.getItem('mineManLeaderboard');
+      if (saved) {
+        leaderboard = JSON.parse(saved);
+      } else {
+        // Initialize with default scores
+        leaderboard = [
+          {name: 'DIAMOND MINER', score: 5000, level: 10},
+          {name: 'STEVE MASTER', score: 4000, level: 8},
+          {name: 'EMERALD HUNTER', score: 3500, level: 7},
+          {name: 'MOB SLAYER', score: 3000, level: 6},
+          {name: 'CAVE EXPLORER', score: 2500, level: 5},
+          {name: 'BLOCK BREAKER', score: 2000, level: 4},
+          {name: 'MINE RUNNER', score: 1500, level: 3},
+          {name: 'CRAFT HERO', score: 1000, level: 2},
+          {name: 'PIXEL PLAYER', score: 750, level: 2},
+          {name: 'NOOB MINER', score: 500, level: 1}
+        ];
+        saveLeaderboard();
+      }
+    }
+    
+    function saveLeaderboard() {
+      localStorage.setItem('mineManLeaderboard', JSON.stringify(leaderboard));
+    }
+    
+    function isHighScore(score) {
+      return leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1].score;
+    }
+    
+    function addToLeaderboard(name, score, level) {
+      const entry = {name: name.toUpperCase(), score: score, level: level};
+      leaderboard.push(entry);
+      leaderboard.sort((a, b) => b.score - a.score);
+      
+      if (leaderboard.length > 10) {
+        leaderboard = leaderboard.slice(0, 10);
+      }
+      
+      newScoreIndex = leaderboard.findIndex(e => e.name === entry.name && e.score === entry.score && e.level === entry.level);
+      saveLeaderboard();
+    }
+    
+    function showLeaderboard() {
+      displayLeaderboard();
+      document.getElementById('leaderboard').style.display = 'block';
+    }
+    
+    function hideLeaderboard() {
+      document.getElementById('leaderboard').style.display = 'none';
+    }
+    
+    function displayLeaderboard() {
+      const listElement = document.getElementById('leaderboardList');
+      listElement.innerHTML = '';
+      
+      if (leaderboard.length === 0) {
+        listElement.innerHTML = '<p>No scores yet!</p>';
+        return;
+      }
+      
+      leaderboard.forEach((entry, index) => {
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'leaderboard-entry';
+        if (index === newScoreIndex) {
+          entryDiv.classList.add('new-score');
+        }
+        
+        const rank = index + 1;
+        let medal = '';
+        if (rank === 1) medal = '🥇';
+        else if (rank === 2) medal = '🥈';
+        else if (rank === 3) medal = '🥉';
+        else medal = `${rank}.`;
+        
+        entryDiv.innerHTML = `
+          <span>${medal} ${entry.name}</span>
+          <span>Level ${entry.level} - ${entry.score.toLocaleString()} pts</span>
+        `;
+        
+        listElement.appendChild(entryDiv);
+      });
+    }
+    
+    function submitScore() {
+      const name = document.getElementById('playerName').value.trim();
+      if (!name) {
+        alert('Please enter your name!');
+        return;
+      }
+      
+      addToLeaderboard(name, score, level);
+      document.getElementById('highScoreInput').style.display = 'none';
+      showLeaderboard();
+    }
+    
+    // Initialize
+    loadLeaderboard();
+    initGame();
+    draw();
+  </script>
+</body>
+</html>
